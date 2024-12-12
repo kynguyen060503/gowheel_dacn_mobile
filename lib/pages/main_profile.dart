@@ -632,96 +632,102 @@ class _MainProfileWidgetState extends State<MainProfileWidget> {
                   ),
                 ),
               ),
+              
+              Obx(() {
+                final user = userController.currentUser.value;
 
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    ShaderMask(
-                          shaderCallback: (Rect bounds) {
-                            return const LinearGradient(
-                              colors: [
-                                Color(0xFF213A58),
-                                Color(0xFF80EE98),
-                              ],
-                            ).createShader(bounds);
-                          },
-                          child:
-                    Text(
-                      'Driver Management',
-                      style: GoogleFonts.interTight(
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                        letterSpacing: 0.0,
+                if (user != null && (user.roles.contains('Driver') || user.roles.contains('Admin'))) {
+                  return Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            ShaderMask(
+                              shaderCallback: (Rect bounds) {
+                                return const LinearGradient(
+                                  colors: [
+                                    Color(0xFF213A58),
+                                    Color(0xFF80EE98),
+                                  ],
+                                ).createShader(bounds);
+                              },
+                              child: Text(
+                                'Driver Management',
+                                style: GoogleFonts.interTight(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                  letterSpacing: 0.0,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                    )
-                  ],
-                ),
-              ),
-
-              Material(
-                color: Colors.transparent,
-                elevation: 0,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(0),
-                ),
-                child: Container(
-                  width: MediaQuery.sizeOf(context).width,
-                  height: 50,
-                  constraints: const BoxConstraints(
-                    minWidth: double.infinity,
-                  ),
-                  decoration: const BoxDecoration(
-                    boxShadow: [
-                      BoxShadow(
-                        blurRadius: 0,
-                        color: Color(0xFFE3E5E7),
-                        offset: Offset(
-                          0.0,
-                          2,
+                      Material(
+                        color: Colors.transparent,
+                        elevation: 0,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(0),
                         ),
-                      )
-                    ],
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsetsDirectional.fromSTEB(16, 0, 4, 0),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.max,
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Icon(
-                          Icons.list_alt,
-                          size: 24,
-                        ),
-                        Expanded(
-                          child:
-                          Text(
-                            ' Driver Booking List',
-                            style: GoogleFonts.interTight(
-                              letterSpacing: 0.0,
+                        child: Container(
+                          width: MediaQuery.sizeOf(context).width,
+                          height: 50,
+                          constraints: const BoxConstraints(
+                            minWidth: double.infinity,
+                          ),
+                          decoration: const BoxDecoration(
+                            boxShadow: [
+                              BoxShadow(
+                                blurRadius: 0,
+                                color: Color(0xFFE3E5E7),
+                                offset: Offset(0.0, 2.0),
+                              ),
+                            ],
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsetsDirectional.fromSTEB(16, 0, 4, 0),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.max,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                const Icon(
+                                  Icons.list_alt,
+                                  size: 24,
+                                ),
+                                Expanded(
+                                  child: Text(
+                                    ' Driver Booking List',
+                                    style: GoogleFonts.interTight(
+                                      letterSpacing: 0.0,
+                                    ),
+                                  ),
+                                ),
+                                IconButton(
+                                  padding: EdgeInsets.zero,
+                                  iconSize: 46.0,
+                                  icon: const Icon(
+                                    Icons.chevron_right_rounded,
+                                    color: Color(0xFF95A1AC),
+                                    size: 25.0,
+                                  ),
+                                  onPressed: () {
+                                    Get.to(() => HomeDriverPage());
+                                  },
+                                ),
+                              ],
                             ),
                           ),
                         ),
-                        IconButton(
-                          padding: EdgeInsets.zero,
-                          iconSize: 46.0,
-                          icon: const Icon(
-                            Icons.chevron_right_rounded,
-                            color:Color(0xFF95A1AC),
-                            size: 25.0,
-                          ),
-                          onPressed: () {
-                            Get.to(() => LocationTrackingPage());
-                          },
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-              ),
+                      ),
+                    ],
+                  );
+                }
+                return const SizedBox.shrink();
+              }),
+
           
               //Logout button
               Padding(

@@ -32,7 +32,7 @@ class Comment {
       modifiedOn: json['modifiedOn'] != null ? DateTime.parse(json['modifiedOn']) : null,
       isDeleted: json['isDeleted'],
       comment: json['comment'],
-      point: json['point'],
+      point: (json['point'] as num).toDouble(),
       userName: json['userName'],
       userImage: json['userImage'],
     );

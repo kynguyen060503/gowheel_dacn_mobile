@@ -1,4 +1,6 @@
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:gowheel_flutterflow_ui/components/snackbar.dart';
 import '../models/booking_model.dart';
 import '../models/booking_request_model.dart';
 import '../service/booking_service.dart';
@@ -6,6 +8,7 @@ import '../service/booking_service.dart';
 class BookingController extends GetxController {
   final BookingService _bookingService = BookingService();
   final RxList<Booking> bookings = <Booking>[].obs;
+  RxList<DateTime> bookedDates = <DateTime>[].obs;
   final RxBool isLoading = false.obs;
   final selectedStatus = ''.obs;
 

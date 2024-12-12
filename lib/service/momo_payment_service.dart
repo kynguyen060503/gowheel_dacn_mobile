@@ -26,9 +26,9 @@ class MomoPaymentService {
       print('Payment URL from API: $paymentUrl'); // Log URL
 
       if (response.statusCode == 200) {
-        // final momoAppUrl = convertToMomoAppUrl(paymentUrl);
-        // print('MoMo App URL: $momoAppUrl'); // Log URL chuyển đổi
-        final success = await launchMomoApp(paymentUrl);
+        final momoAppUrl = convertToMomoAppUrl(paymentUrl);
+        print('MoMo App URL: $momoAppUrl'); // Log URL chuyển đổi
+        final success = await launchMomoApp(momoAppUrl);
         if (!success) {
           throw Exception('Could not launch MoMo app');
         }
@@ -40,12 +40,12 @@ class MomoPaymentService {
     }
   }
 
-  // String convertToMomoAppUrl(String webUrl) {
-  // if (webUrl.contains('https://test-payment.momo.vn')) {
-  //   return webUrl.replaceFirst('https://test-payment.momo.vn', 'momo://app');
-  // }
-  // throw Exception('Invalid MoMo payment URL: $webUrl');
-  // }
+  String convertToMomoAppUrl(String webUrl) {
+  if (webUrl.contains('https://test-payment.momo.vn')) {
+    return webUrl.replaceFirst('https://test-payment.momo.vn', 'momo://app');
+  }
+  throw Exception('Invalid MoMo payment URL: $webUrl');
+  }
 
 
   Future<bool> launchMomoApp(String paymentUrl) async {

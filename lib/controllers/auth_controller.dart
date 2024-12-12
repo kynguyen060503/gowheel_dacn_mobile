@@ -1,7 +1,9 @@
 import 'package:get/get.dart';
 import 'package:gowheel_flutterflow_ui/components/snackbar.dart';
+import 'package:gowheel_flutterflow_ui/controllers/user_controller.dart';
 import 'package:gowheel_flutterflow_ui/pages/sign_in.dart';
 import 'package:gowheel_flutterflow_ui/root.dart';
+import 'package:gowheel_flutterflow_ui/service/hub_service.dart';
 import 'package:gowheel_flutterflow_ui/service/storage_service.dart';
 import '../service/auth_service.dart';
 
@@ -20,6 +22,7 @@ class AuthController extends GetxController {
         Snackbar.showSuccess('Success!', 'Logged in successfully');
         final token = response['message'];
         tokenService.saveToken(token);
+        HubService.instance.connect();
         Get.offAll(() => const RootPage());
       }
     } catch (e) {
@@ -53,7 +56,9 @@ class AuthController extends GetxController {
   Future<void> logout() async {
     try {
       tokenService.deleteToken();
+      Get.find<UserController>().currentUser.value = null;
       Snackbar.showSuccess("Success", "Loggout successfully!");
+      HubService.instance.disconnect();
       Get.offAll(() => const SignInWidget());
     } catch (e) {
       Snackbar.showError("Error", "Something went wrong, we cannot logout for you!");

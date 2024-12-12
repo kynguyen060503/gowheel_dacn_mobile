@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:gowheel_flutterflow_ui/components/notification_icon.dart';
 import 'package:gowheel_flutterflow_ui/components/post_list.dart';
 
 import '../controllers/favorite_controller.dart';
@@ -22,6 +23,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
+    postController.refreshPosts();
     _loadFavorites();
   }
 
@@ -59,6 +61,12 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
             letterSpacing: 0.0,
           ),
         ),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.all(12.0),
+            child: NotificationIcon(),
+          )
+        ],
       ),
       body: SingleChildScrollView(
         child: Column(

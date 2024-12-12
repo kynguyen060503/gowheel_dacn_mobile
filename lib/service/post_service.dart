@@ -40,6 +40,7 @@ class PostService {
         return[];
       }
     } catch (e) {
+      print(e);
       rethrow;
     }
   }

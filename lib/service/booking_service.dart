@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter/material.dart';
 import 'package:gowheel_flutterflow_ui/service/storage_service.dart';
 import 'package:http/http.dart' as http;
 
@@ -83,5 +84,51 @@ class BookingService {
     Snackbar.showError("Error", "An error occurred while canceling booking!");
     return false;
   }
+}
+
+  Future<List<DateTimeRange>> getBookedDateRanges(int postId) async {
+  try {
+    final token = await tokenService.getToken();
+    final response = await http.get(
+      Uri.parse("${URL.baseUrl}User/Booking/GetAllBookedDates/$postId"),
+      headers: {
+        'Authorization': 'Bearer $token',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      final jsonResponse = jsonDecode(response.body);
+      if (jsonResponse['success'] == true && jsonResponse['data'] != null) {
+        final List<dynamic> dates = jsonResponse['data'];
+        List<DateTimeRange> bookedRanges = [];
+
+        // Convert the date strings into DateTime objects
+        for (int i = 0; i < dates.length; i += 2) {
+          if (i + 1 < dates.length) {
+            try {
+              DateTime startDate = DateTime.parse(dates[i]);
+              DateTime endDate = DateTime.parse(dates[i + 1]);
+              bookedRanges.add(DateTimeRange(start: startDate, end: endDate));
+            } catch (e) {
+              print('Error parsing date range: $e');
+              // Skip this invalid date pair
+              continue;
+            }
+          }
+        }
+        return bookedRanges;
+      } else {
+        print('API response success flag is false or data is null.');
+        return [];
+      }
+    } else if (response.statusCode == 404) {
+      print('Error 404: The requested resource was not found.');
+    } else {
+      print('Error: Unexpected status code ${response.statusCode}');
+    }
+  } catch (e) {
+    print('Error fetching booked date ranges: $e');
+  }
+  return [];
 }
 }

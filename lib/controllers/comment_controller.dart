@@ -13,11 +13,11 @@ class CommentController extends GetxController {
   Future<void> fetchComments(int postId) async {
     try {
       isLoading.value = true;
-
       final fetchedComments = await _commentService.getComments(postId);
-
+      print('Fetched ${fetchedComments.length} comments');
       comments.assignAll(fetchedComments);
     } catch (e) {
+      print('Error in fetchComments: $e');
       Snackbar.showError('Error','Failed to load comments');
     } finally {
       isLoading.value = false;

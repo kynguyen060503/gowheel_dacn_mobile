@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:get/get.dart';
+import 'package:gowheel_flutterflow_ui/pages/detail_booking.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import 'package:intl/intl.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -51,7 +52,7 @@ class BookingScreen extends StatelessWidget {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      _buildFilterChip(
+                     _buildFilterChip(
                         label: 'All',
                         selected: controller.selectedStatus.value == '',
                         onSelected: () => controller.setStatusFilter(''),
@@ -66,6 +67,13 @@ class BookingScreen extends StatelessWidget {
                       ),
                       SizedBox(width: 8),
                       _buildFilterChip(
+                        label: 'Denied',
+                        selected: controller.selectedStatus.value == 'Denied',
+                        onSelected: () => controller.setStatusFilter('Denied'),
+                        color: Colors.red,
+                      ),
+                      SizedBox(width: 8),
+                      _buildFilterChip(
                         label: 'Owner Confirm',
                         selected: controller.selectedStatus.value == 'Accept Booking',
                         onSelected: () => controller.setStatusFilter('Accept Booking'),
@@ -73,17 +81,24 @@ class BookingScreen extends StatelessWidget {
                       ),
                       SizedBox(width: 8),
                       _buildFilterChip(
+                        label: 'Waiting',
+                        selected: controller.selectedStatus.value == 'Waiting',
+                        onSelected: () => controller.setStatusFilter('Waiting'),
+                        color: Colors.yellow,
+                      ),
+                      SizedBox(width: 8),
+                      _buildFilterChip(
                         label: 'Canceled Processing',
                         selected: controller.selectedStatus.value == 'Processing',
                         onSelected: () => controller.setStatusFilter('Processing'),
-                        color: Colors.red,
+                        color: Colors.deepOrange,
                       ),
                       SizedBox(width: 8),
                       _buildFilterChip(
                         label: 'Canceled',
                         selected: controller.selectedStatus.value == 'Canceled',
                         onSelected: () => controller.setStatusFilter('Canceled'),
-                        color: Colors.red,
+                        color: Colors.grey,
                       ),
                     ],
                   ),
@@ -211,90 +226,97 @@ class _BookingCardState extends State<BookingCard> {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      margin: EdgeInsets.all(8),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12), // Góc bo tròn
-        side: BorderSide(
-          color: Colors.grey, // Màu viền
-          width: 3,          // Độ dày viền
-        ),
-      ),
-      child: Column(
-        children: [
-          Padding(
-            padding: EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.fromLTRB(0, 30, 0, 0),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(8),
-                        child: widget.isLoading
-                          ? Container(
-                              width: 100, 
-                              height: 100, 
-                              color: Colors.grey[300]
-                            )
-                          : Image.network(
-                              URL.imageUrl + widget.booking.post.image,
-                              width: 120,
-                              height: 120,
-                              fit: BoxFit.cover,
-                              errorBuilder: (context, error, stackTrace) {
-                                return Container(
-                                  width: 120,
-                                  height: 120,
-                                  color: Colors.grey[300],
-                                  child: Icon(Icons.image_not_supported),
-                                );
-                              },
-                            ),
-                      ),
-                    ),
-                    SizedBox(width: 16),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            widget.booking.post.name,
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          SizedBox(height: 8),
-                          Text(
-                            'Pick-up date: ${DateFormat('dd/MM/yyyy').format(widget.booking.recieveOn)}',
-                            style: TextStyle(color: Colors.grey[600]),
-                          ),
-                          Text(
-                            'Return date:\n${DateFormat('dd/MM/yyyy').format(widget.booking.returnOn)}',
-                            style: TextStyle(color: Colors.grey[600]),
-                          ),
-                          Text(
-                            'Rental price: ${NumberFormat.currency(locale: 'vi').format(widget.booking.total)}',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: Colors.green,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-                // Expanded details section
-                _buildExpandedSection(),
-              ],
-            ),
+    return GestureDetector(
+      onTap: widget.isLoading 
+        ? null 
+        : () {
+            Get.to(() => BookingDetailScreen(booking: widget.booking));
+          },
+      child: Card(
+        margin: EdgeInsets.all(8),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12), // Góc bo tròn
+          side: BorderSide(
+            color: Colors.grey, // Màu viền
+            width: 3,          // Độ dày viền
           ),
-        ],
+        ),
+        child: Column(
+          children: [
+            Padding(
+              padding: EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.fromLTRB(0, 30, 0, 0),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(8),
+                          child: widget.isLoading
+                            ? Container(
+                                width: 100, 
+                                height: 100, 
+                                color: Colors.grey[300]
+                              )
+                            : Image.network(
+                                URL.imageUrl + widget.booking.post.image,
+                                width: 120,
+                                height: 120,
+                                fit: BoxFit.cover,
+                                errorBuilder: (context, error, stackTrace) {
+                                  return Container(
+                                    width: 120,
+                                    height: 120,
+                                    color: Colors.grey[300],
+                                    child: Icon(Icons.image_not_supported),
+                                  );
+                                },
+                              ),
+                        ),
+                      ),
+                      SizedBox(width: 16),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              widget.booking.post.name,
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            SizedBox(height: 8),
+                            Text(
+                              'Pick-up date: ${DateFormat('dd/MM/yyyy').format(widget.booking.recieveOn)}',
+                              style: TextStyle(color: Colors.grey[600]),
+                            ),
+                            Text(
+                              'Return date:\n${DateFormat('dd/MM/yyyy').format(widget.booking.returnOn)}',
+                              style: TextStyle(color: Colors.grey[600]),
+                            ),
+                            Text(
+                              'Rental price: ${NumberFormat.currency(locale: 'vi').format(widget.booking.total)}',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.green,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  // Expanded details section
+                  _buildExpandedSection(),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -315,7 +337,7 @@ class _BookingCardState extends State<BookingCard> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  _isExpanded ? 'Thu gọn' : 'Xem chi tiết',
+                  _isExpanded ? 'Show less' : 'More details',
                   style: TextStyle(color: Colors.blue),
                 ),
                 Icon(
@@ -335,18 +357,17 @@ class _BookingCardState extends State<BookingCard> {
   List<Widget> _buildExpandedContent() {
     return [
       Divider(height: 24),
-      _buildInfoRow('Trạng thái đơn', _buildStatusChip(widget.booking.status)),
-      _buildInfoRow('Yêu cầu tài xế', _buildDriverRequestChip(widget.booking.isRequireDriver)),
-      _buildInfoRow('Thời gian nhận:', DateFormat('dd/MM/yyyy HH:mm').format(widget.booking.recieveOn)),
-      _buildInfoRow('Thời gian trả:', DateFormat('dd/MM/yyyy HH:mm').format(widget.booking.returnOn)),
-      _buildInfoRow('Tổng tiền:', '${NumberFormat.currency(locale: 'vi').format(widget.booking.total)}'),
+      _buildInfoRow('Booking Status', _buildStatusChip(widget.booking.status)),
+      _buildInfoRow('Driver Request', _buildDriverRequestChip(widget.booking.isRequireDriver)),
+      _buildInfoRow('Pick-up Time:', DateFormat('dd/MM/yyyy HH:mm').format(widget.booking.recieveOn)),
+      _buildInfoRow('Return Time:', DateFormat('dd/MM/yyyy HH:mm').format(widget.booking.returnOn)),
+      _buildInfoRow('Total Amount:', '${NumberFormat.currency(locale: 'vi').format(widget.booking.total)}'),
       if (widget.booking.latitude != null && widget.booking.longitude != null)
-        _buildInfoRow('Địa điểm thuê:', _locationAddress),
+        _buildInfoRow('Rental Location:', _locationAddress),
       if (widget.booking.promotion != null && widget.booking.promotion!.content.isNotEmpty)
-        _buildInfoRow('Khuyến mãi:', widget.booking.promotion!.content),
-      _buildInfoRow('Số tiền cuối:', '${NumberFormat.currency(locale: 'vi').format(widget.booking.finalValue)}'),
-      _buildInfoRow('Tiền cọc:', '${NumberFormat.currency(locale: 'vi').format(widget.booking.prePayment)}'),
-      
+        _buildInfoRow('Promotion:', widget.booking.promotion!.content),
+      _buildInfoRow('Final Amount:', '${NumberFormat.currency(locale: 'vi').format(widget.booking.finalValue)}'),
+      _buildInfoRow('Deposit:', '${NumberFormat.currency(locale: 'vi').format(widget.booking.prePayment)}'),
       if(widget.booking.status == 'Pending' || widget.booking.status == 'Accept Booking')
       SizedBox(height: 16),
       if(widget.booking.status == 'Pending' || widget.booking.status == 'Accept Booking')
@@ -363,8 +384,9 @@ class _BookingCardState extends State<BookingCard> {
                 borderRadius: BorderRadius.circular(8),
               ),
             ),
-            child: Text('Hủy đặt xe'),
+            child: Text('Cancel booking'),
           ),
+          const Spacer(),
           ElevatedButton(
               onPressed: () => _handlePayment(widget.booking.id),
               style: ElevatedButton.styleFrom(
@@ -373,7 +395,7 @@ class _BookingCardState extends State<BookingCard> {
                   borderRadius: BorderRadius.circular(8),
                 ),
               ),
-              child: Text('Thanh toán'),
+              child: Text('Prepay now'),
           ),
         ],
       ),

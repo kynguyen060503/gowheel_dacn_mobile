@@ -46,19 +46,19 @@ class CommentService extends GetxService {
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> jsonResponse = json.decode(response.body);
-
+        
         if (jsonResponse['success'] && jsonResponse['data'] != null) {
-          final List<dynamic> commentsList = jsonResponse['data'];
-
-          final comments = commentsList.map((json) => Comment.fromJson(json)).toList();
-          return comments;
+          final List<dynamic> commentsList = jsonResponse['data'] as List<dynamic>;
+          return commentsList.map((json) => Comment.fromJson(json)).toList();
         }
       }
       return [];
-    } catch (e) {
+    } catch (e, stackTrace) {
+      print('Error fetching comments: $e\n$stackTrace');
       return [];
     }
   }
+  
   Future<bool> removeComment(int id) async {
     try {
       final token = await tokenService.getToken();

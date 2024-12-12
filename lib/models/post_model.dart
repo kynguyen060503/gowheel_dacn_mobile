@@ -1,6 +1,6 @@
 import 'package:gowheel_flutterflow_ui/models/post_amenity_model.dart';
 import 'package:gowheel_flutterflow_ui/models/promotion_model.dart';
-import 'package:gowheel_flutterflow_ui/models/rating_mocel.dart';
+import 'package:gowheel_flutterflow_ui/models/rating_model.dart';
 import 'package:gowheel_flutterflow_ui/models/user_model.dart';
 
 class Post {

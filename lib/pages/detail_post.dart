@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:gowheel_flutterflow_ui/components/snackbar.dart';
+import 'package:gowheel_flutterflow_ui/service/booking_service.dart';
 import 'package:gowheel_flutterflow_ui/url.dart';
 import '../../controllers/booking_controller.dart';
 import '../../controllers/favorite_controller.dart';
@@ -39,10 +40,11 @@ class _DetailPageState extends State<DetailPage> {
   int _currentImageIndex = 0;
   LatLng? _pickedLocation;
   String _pickedAddress = 'No location selected';
+  List<DateTimeRange> _blockedDates = [];
 
   final FavoriteController _favoriteController = Get.put(FavoriteController());
   final BookingController _bookingController = Get.put(BookingController());
-  // ignore: unused_field
+  final BookingService _bookingService  = Get.put(BookingService());
   final CommentService _commentService = Get.put(CommentService());
 
   @override
@@ -50,7 +52,15 @@ class _DetailPageState extends State<DetailPage> {
     super.initState();
     _loadFavorites();
     _checkIfOwner();
+    _fetchBlackoutDates();
   }
+
+  Future<void> _fetchBlackoutDates() async {
+  List<DateTimeRange> blackoutDates = await _bookingService.getBookedDateRanges(widget.post.id);
+  setState(() {
+    _blockedDates = blackoutDates;
+  });
+}
 
   void _pickLocation() async {
     final result = await Navigator.push(
@@ -196,7 +206,7 @@ class _DetailPageState extends State<DetailPage> {
   }
 
   double? calculatedPrepayPrice(){
-    return calculateTotalPrice() * 0.5;
+    return calculateFinalPrice()! * 0.5;
   }
 
   Widget _buildImageCarousel() {
@@ -261,6 +271,7 @@ class _DetailPageState extends State<DetailPage> {
 
   @override
   Widget build(BuildContext context) {
+    
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
       onTap: () {
@@ -501,22 +512,27 @@ class _DetailPageState extends State<DetailPage> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           DateTimeRangePickerWidget(
-                            startDate: startDate,
-                            endDate: endDate,
-                            startTime: startTime,
-                            endTime: endTime,
-                            numberOfDays: numberOfHours > 0 ? (numberOfHours / 24)
-                                .ceil() : 0,
-                            onDateTimeRangeSelected: (start, end, pickStartTime,
-                                pickEndTime) {
+                          startDate: startDate,
+                          endDate: endDate,
+                          startTime: startTime,
+                          endTime: endTime,
+                          numberOfDays: numberOfHours > 0 ? (numberOfHours / 24).ceil() : 0,
+                          blackoutDateRanges: _blockedDates,
+                          onDateTimeRangeSelected: (start, end, pickStartTime, pickEndTime) {
+                            if (start != null && end != null && pickStartTime != null && pickEndTime != null) {
                               setState(() {
                                 startDate = start;
                                 endDate = end;
                                 startTime = pickStartTime;
                                 endTime = pickEndTime;
                               });
-                            },
-                          ),
+                            } else {
+                              // Handle the error case here (for example, show a warning message to the user)
+                              print("Invalid date range selected.");
+                            }
+                          },
+                        ),
+
                           Divider(color: Colors.blue[100]),
                           PromotionSelector(
                             postPromotions: widget.post.postPromotion,
@@ -528,7 +544,7 @@ class _DetailPageState extends State<DetailPage> {
                           ),
                           if(widget.post.hasDriver == false)
                             Divider(color: Colors.blue[100]),
-                          if(!widget.post.hasDriver == false)
+                          if(widget.post.hasDriver == false)
                             Obx(() => SwitchListTile(
                               title: const Text('Want to rent Driver?'),
                               value: isRequestDriver.value,
@@ -537,6 +553,7 @@ class _DetailPageState extends State<DetailPage> {
                               },
                               activeColor: Colors.blue,
                             )),
+                            Divider(color: Colors.blue[100]),
                             Text(
                               'Pick-up Location',
                               style: GoogleFonts.urbanist(

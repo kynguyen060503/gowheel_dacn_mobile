@@ -19,7 +19,7 @@ class _RootPageState extends State<RootPage> {
     return [
       const HomePage(),
       FavoritePage(),
-      NotificationPage(),
+      NotificationView(),
       const MainProfileWidget()
     ];
   }

@@ -2,7 +2,7 @@ class Rating {
   int? id;
   bool? isDeleted;
   String? comment;
-  double? point;
+  int? point;
   String? userName;
   String? userImage;
 
