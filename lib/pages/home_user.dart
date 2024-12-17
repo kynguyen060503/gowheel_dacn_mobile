@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:gowheel_flutterflow_ui/components/notification_icon.dart';
 import 'package:gowheel_flutterflow_ui/components/post_list.dart';
+import 'package:gowheel_flutterflow_ui/pages/list_search.dart';
 
 import '../controllers/favorite_controller.dart';
 import '../controllers/post_controler.dart';
@@ -73,39 +74,36 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Search Bar
-            Container(
-              padding: const EdgeInsets.only(top: 10),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                    width: size.width * .9,
-                    decoration: BoxDecoration(
-                      color: Theme.of(context).colorScheme.primary.withOpacity(.1),
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(Icons.search, color: Colors.black.withOpacity(.6)),
-                        Expanded(
-                          child: TextFormField(
-                            decoration: const InputDecoration(
-                              hintText: "Search here...",
-                              border: InputBorder.none,
-                              contentPadding: EdgeInsets.symmetric(vertical: 15),
-                              focusedBorder: InputBorder.none,
-                            ),
+            GestureDetector(
+              onTap: () => Get.to(() => CarFilterScreen()),
+              child: Container(
+                padding: const EdgeInsets.only(top: 10),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                      width: size.width * .9,
+                      height: 50,
+                      decoration: BoxDecoration(
+                        color: Theme.of(context).colorScheme.primary.withOpacity(.1),
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.search, color: Colors.black.withOpacity(.6)),
+                          Expanded(
+                            child: Text("Find your ideal car")
                           ),
-                        ),
-                        const SizedBox(width: 10),
-                        const Icon(Icons.filter_list),
-                      ],
-                    ),
-                  )
-                ],
+                          const SizedBox(width: 10),
+                          const Icon(Icons.filter_list),
+                        ],
+                      ),
+                    )
+                  ],
+                ),
               ),
             ),
             Padding(

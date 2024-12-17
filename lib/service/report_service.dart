@@ -47,37 +47,40 @@ class ReportService{
     }
   }
   Future<bool> createReport({
-    required String content,
-    required int postId,
-    required int reportTypeId,
-  }) async {
-    try {
-      final token = await getToken();
+  required String content,
+  required int postId,
+  required int reportTypeId,
+}) async {
+  try {
+    final token = await getToken();
 
-      final response = await http.post(
-        Uri.parse("${URL.baseUrl}UserReport/ReportByPostId"),
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer $token',
-        },
-        body: json.encode({
-          'id': 0,
-          'content': content,
-          'postId': postId,
-          'reportTypeId': reportTypeId,
-        }),
-      );
+    final request = http.MultipartRequest(
+      'POST',
+      Uri.parse("${URL.baseUrl}UserReport/ReportByPostId"),
+    );
 
-      if (response.statusCode == 200) {
-        final Map<String, dynamic> responseData = json.decode(response.body);
-        return responseData['success'] == true;
-      } else {
-        return false;
-      }
-    } catch (e) {
+    request.headers.addAll({
+      'Authorization': 'Bearer $token',
+    });
+
+    request.fields['content'] = content;
+    request.fields['postId'] = postId.toString();
+    request.fields['reportTypeId'] = reportTypeId.toString();
+
+    final response = await request.send();
+
+    if (response.statusCode == 200) {
+      final responseBody = await response.stream.bytesToString();
+      final Map<String, dynamic> responseData = json.decode(responseBody);
+      return responseData['success'] == true;
+    } else {
       return false;
     }
+  } catch (e) {
+    return false;
   }
+}
+
 
   Future<String?> getToken() async {
     final prefs = await SharedPreferences.getInstance();

@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:gowheel_flutterflow_ui/models/booking_model.dart';
 import 'package:gowheel_flutterflow_ui/service/storage_service.dart';
 import 'package:http/http.dart' as http;
 
@@ -131,4 +132,49 @@ class BookingService {
   }
   return [];
 }
+
+  Future<Booking?> getBookingById(int bookingId) async {
+    try {
+      final token = await tokenService.getToken();
+
+      final response = await http.get(
+        Uri.parse("${URL.baseUrl}User/Booking/GetById/$bookingId"),
+        headers: {
+          'Authorization': 'Bearer $token',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        print(response.body);
+        return Booking.fromJson(jsonDecode(response.body));
+      }
+      return null;
+    } catch (e) {
+      print(e);
+      Snackbar.showError("Error", "Failed to load personal booking!");
+      return null;
+    }
+  }
+
+  Future<BookingResponse?> getPendingBookingsByUserId() async {
+    try {
+      final token = await tokenService.getToken();
+
+      final response = await http.get(
+        Uri.parse("${URL.baseUrl}User/Booking/GetAllPendingBookingsByUserId"),
+        headers: {
+          'Authorization': 'Bearer $token',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        print(response.body);
+        return BookingResponse.fromJson(jsonDecode(response.body));
+      }
+      return null;
+    } catch (e) {
+      Snackbar.showError("Error", "Failed to create booking!");
+      return null;
+    }
+  }
 }

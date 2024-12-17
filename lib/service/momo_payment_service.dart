@@ -41,30 +41,31 @@ class MomoPaymentService {
   }
 
   String convertToMomoAppUrl(String webUrl) {
-  if (webUrl.contains('https://test-payment.momo.vn')) {
+  if (webUrl.startsWith('https://test-payment.momo.vn')) {
     return webUrl.replaceFirst('https://test-payment.momo.vn', 'momo://app');
   }
   throw Exception('Invalid MoMo payment URL: $webUrl');
-  }
+}
 
 
   Future<bool> launchMomoApp(String paymentUrl) async {
-    try {
-      final uri = Uri.parse(paymentUrl);
-      if (await canLaunchUrl(uri)) {
-        print('Launching MoMo app with URL: $paymentUrl');
-        await launchUrl(
-          uri,
-          mode: LaunchMode.externalApplication,
-        );
-        return true;
-      } else {
-        print('Cannot launch URL: $paymentUrl');
-      }
-      return false;
-    } catch (e) {
-      print('Error launching MoMo app: $e');
-      return false;
+  try {
+    final uri = Uri.parse(paymentUrl);
+    if (await canLaunchUrl(uri)) {
+      print('Launching MoMo app with URL: $paymentUrl');
+      await launchUrl(
+        uri,
+        mode: LaunchMode.externalApplication,
+      );
+      return true;
+    } else {
+      print('Cannot launch URL: $paymentUrl');
     }
+    return false;
+  } catch (e) {
+    print('Error launching MoMo app: $e');
+    return false;
   }
+}
+
 }

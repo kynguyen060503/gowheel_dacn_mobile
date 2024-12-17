@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:gowheel_flutterflow_ui/controllers/favorite_controller.dart';
+import 'package:gowheel_flutterflow_ui/controllers/notification_controller.dart';
+import 'package:gowheel_flutterflow_ui/controllers/user_controller.dart';
 import 'package:gowheel_flutterflow_ui/pages/sign_in.dart';
 import 'package:gowheel_flutterflow_ui/root.dart';
 import 'package:gowheel_flutterflow_ui/service/storage_service.dart';
+
+import 'controllers/post_controler.dart';
 
 void main() {
   runApp(const MyApp());
@@ -14,7 +19,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     TokenService tokenService = TokenService();
-
+  
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(

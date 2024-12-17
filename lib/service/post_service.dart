@@ -32,6 +32,7 @@ class PostService {
         }
 
         final List<dynamic> postsJson = responseData['data'] as List<dynamic>;
+        //final List<dynamic> postsJson = responseData['data']['listPost'] as List<dynamic>;
         return postsJson
             .map((json) => Post.fromJson(json))
             .whereType<Post>()
@@ -102,12 +103,13 @@ class PostService {
       });
 
       // Add amenities
-      for (var amenityId in amenitiesIds) {
-        request.fields['AmenitiesIds'] = amenityId.toString();
+      for (var i = 0; i < amenitiesIds.length; i++) {
+        request.fields['AmenitiesIds[$i]'] = amenitiesIds[i].toString();
       }
 
       var response = await request.send();
       var responseData = await response.stream.bytesToString();
+      print(responseData);
 
       if (response.statusCode == 200) {
         final decodedResponse = json.decode(responseData);
@@ -155,4 +157,40 @@ class PostService {
     }
   }
 
+  Future<List<Post>> loadMorePosts(int pageIndex) async {
+    try {
+      final response = await http.get(
+        Uri.parse("${URL.baseUrl}User/Post/GetAll?pageIndex=$pageIndex"),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      );
+      print(Uri.parse("${URL.baseUrl}User/Post/GetAll?page=$pageIndex").toString());
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> responseData = json.decode(response.body);
+
+        if (responseData['success'] != true) {
+          return [];
+        }
+        
+        if (responseData['data'] == null) {
+          return [];
+        }
+        print("Response for page $pageIndex: ${response.body}");
+        final List<dynamic> postsJson = responseData['data'] as List<dynamic>;
+        //final List<dynamic> postsJson = responseData['data']['listPost'] as List<dynamic>;
+        return postsJson
+            .map((json) => Post.fromJson(json))
+            .whereType<Post>()
+            .toList();
+      } else {
+        return[];
+      }
+    } catch (e) {
+      print(e);
+      rethrow;
+    }
+  }
+
+  
 }

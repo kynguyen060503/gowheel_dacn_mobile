@@ -12,7 +12,9 @@ import '../service/momo_payment_service.dart';
 import '../url.dart';
 
 class BookingScreen extends StatelessWidget {
-  const BookingScreen({super.key});
+  BookingScreen({super.key}){
+    Get.put(BookingController()).fetchBookings();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -283,7 +285,7 @@ class _BookingCardState extends State<BookingCard> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              widget.booking.post.name,
+                              widget.booking.post.name + "\t#" + widget.booking.id.toString(),
                               style: TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,

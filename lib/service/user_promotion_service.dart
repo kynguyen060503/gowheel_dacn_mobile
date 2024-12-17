@@ -39,9 +39,10 @@ class UserPromotionService {
         'ExpiredDate': expiredDate.toIso8601String(),
       });
 
-      for (var postId in postIds) {
-        request.fields['PostIds'] = postId.toString();
+      for (var i = 0; i < postIds.length; i++) {
+        request.fields['PostIds[$i]'] = postIds[i].toString();
       }
+
 
       var response = await request.send();
       var responseData = await response.stream.bytesToString();

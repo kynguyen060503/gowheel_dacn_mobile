@@ -20,6 +20,7 @@ class NotificationController extends GetxController {
     isLoading.value = true;
     try {
       notifications.value = await _service.getAllNotifications();
+      _updateUnreadCount(); // Update unread count after fetching
     } catch (e) {
       print('Error in controller: $e');
     } finally {
@@ -27,16 +28,18 @@ class NotificationController extends GetxController {
     }
   }
 
-  Future<void> markNotificationRead(int notificationId) async {
-    await _service.markNotificationAsRead(notificationId);
-    // Optionally refresh the list or update the specific notification
-    fetchNotifications();
+  // New method to update unread count
+  void _updateUnreadCount() {
+    unreadCount.value = notifications
+        .where((notification) => notification.isRead == false)
+        .length;
   }
 
-  void incrementCount() {
-    unreadCount.value++;
+  Future<void> markNotificationRead(int notificationId) async {
+    await _service.markNotificationAsRead(notificationId);
+    await fetchNotifications(); // Refresh the list and update counts
   }
-  
+
   void clearCount() {
     unreadCount.value = 0;
   }

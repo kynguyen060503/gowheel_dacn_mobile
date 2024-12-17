@@ -1,23 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
+import 'package:flutter/scheduler.dart';
 
 class Snackbar {
   static void showAwesomeSnackbar(String title, String message, ContentType type) {
-    final snackBar = SnackBar(
-      elevation: 0,
-      behavior: SnackBarBehavior.floating,
-      backgroundColor: Colors.transparent,
-      content: AwesomeSnackbarContent(
-        title: title,
-        message: message,
-        contentType: type,
-      ),
-      duration: const Duration(seconds: 3),
-    );
+    // Use SchedulerBinding to ensure snackbar is shown after build phase
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      final snackBar = SnackBar(
+        elevation: 0,
+        behavior: SnackBarBehavior.floating,
+        backgroundColor: Colors.transparent,
+        content: AwesomeSnackbarContent(
+          title: title,
+          message: message,
+          contentType: type,
+        ),
+        duration: const Duration(seconds: 3),
+      );
 
-    Get.closeCurrentSnackbar();
-    ScaffoldMessenger.of(Get.context!).showSnackBar(snackBar);
+      Get.closeCurrentSnackbar(); // Close any currently visible snackbar
+      ScaffoldMessenger.of(Get.context!).showSnackBar(snackBar);
+    });
   }
 
   static showError(String title, String message) {

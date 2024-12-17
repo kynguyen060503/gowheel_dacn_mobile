@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:gowheel_flutterflow_ui/controllers/favorite_controller.dart';
+import 'package:gowheel_flutterflow_ui/controllers/notification_controller.dart';
+import 'package:gowheel_flutterflow_ui/controllers/post_controler.dart';
+import 'package:gowheel_flutterflow_ui/controllers/user_controller.dart';
 import 'package:gowheel_flutterflow_ui/pages/home_user.dart';
 import 'package:gowheel_flutterflow_ui/pages/list_favorite.dart';
 import 'package:gowheel_flutterflow_ui/pages/main_profile.dart';
@@ -13,6 +18,7 @@ class RootPage extends StatefulWidget {
 }
 
 class _RootPageState extends State<RootPage> {
+
   int _currentIndex = 0;
 
   List<Widget> _widgetOptions() {

@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:gowheel_flutterflow_ui/components/snackbar.dart';
+import 'package:gowheel_flutterflow_ui/controllers/post_controler.dart';
 import 'package:gowheel_flutterflow_ui/controllers/user_controller.dart';
 import 'package:gowheel_flutterflow_ui/pages/sign_in.dart';
 import 'package:gowheel_flutterflow_ui/root.dart';
@@ -9,6 +10,7 @@ import '../service/auth_service.dart';
 
 class AuthController extends GetxController {
   final AuthService _authService = AuthService();
+  final PostController _postController = Get.find<PostController>();
   final tokenService = TokenService();
   var isLoading = false.obs;
 
@@ -19,11 +21,11 @@ class AuthController extends GetxController {
       if (response['success'] == false) {
         Snackbar.showError('Error!', response['message']);
       } else {
-        Snackbar.showSuccess('Success!', 'Logged in successfully');
         final token = response['message'];
         tokenService.saveToken(token);
         HubService.instance.connect();
         Get.offAll(() => const RootPage());
+        Snackbar.showSuccess('Success!', 'Logged in successfully');
       }
     } catch (e) {
       Snackbar.showWarning('Connection Error!', 'Lost connection to server!');
@@ -39,11 +41,11 @@ class AuthController extends GetxController {
       if (response['success'] == false) {
         Snackbar.showError("Error", response['message']);
       } else {
-        Snackbar.showSuccess("Success", "Signup successfully!");
         Get.offAll(() => const SignInWidget(),
             transition: Transition.size,
             duration: const Duration(seconds: 1)
         );
+        Snackbar.showSuccess("Success", "Signup successfully!");
       }
     } catch(e) {
       Snackbar.showWarning('Connection Error!', 'Lost connection to server!');
@@ -58,6 +60,7 @@ class AuthController extends GetxController {
       tokenService.deleteToken();
       Get.find<UserController>().currentUser.value = null;
       Snackbar.showSuccess("Success", "Loggout successfully!");
+      _postController.resetPageIndex();
       HubService.instance.disconnect();
       Get.offAll(() => const SignInWidget());
     } catch (e) {

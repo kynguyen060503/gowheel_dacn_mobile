@@ -24,6 +24,7 @@ class FavoriteService {
 
       if (response.statusCode == 200) {
         final jsonResponse = jsonDecode(response.body);
+        print("getFavorites: " + response.body);
         if (jsonResponse['success'] == true && jsonResponse['data'] != null) {
           final List<dynamic> favorites = jsonResponse['data'];
 
@@ -54,7 +55,7 @@ class FavoriteService {
           'postId': postId,
         }),
       );
-
+      print("addToFavorite: " + response.body); 
       return response.statusCode == 200;
     } catch (e) {
       return false;
@@ -71,7 +72,7 @@ class FavoriteService {
           'Authorization': 'Bearer $token',
         },
       );
-
+      print("removeFromFavorite: " + response.body);
       return response.statusCode == 200;
     } catch (e) {
       return false;

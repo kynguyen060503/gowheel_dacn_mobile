@@ -23,7 +23,7 @@ class DriverBookingService {
           'accept': 'text/plain'
         },
       );
-
+      print(response.body);
       if (response.statusCode == 200) {
         final jsonResponse = jsonDecode(response.body);
         if (jsonResponse['success'] == true && jsonResponse['data'] != null) {

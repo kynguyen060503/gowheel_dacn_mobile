@@ -182,9 +182,9 @@ class _BookingDetailScreenState extends State<BookingDetailScreen> {
           _buildInfoRow('Vehicle Name', widget.booking.post.name),
           _buildInfoRow('Vehicle Owner', widget.booking.post.user?.name ?? 'N/A'),
           if (widget.booking.post.carTypeName != null)
-            _buildInfoRow('Vehicle Type', widget.booking.post.carTypeName!),
+            _buildInfoRow('Vehicle Type', widget.booking.post.carTypeName),
           if (widget.booking.post.companyName != null)
-            _buildInfoRow('Company', widget.booking.post.companyName!),
+            _buildInfoRow('Company', widget.booking.post.companyName),
         ],
       ),
     );
